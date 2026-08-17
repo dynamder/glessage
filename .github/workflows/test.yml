@@ -10,11 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # setup-beam installs Erlang/OTP and rebar3 from builds.hex.pm.
+      # setup-beam installs Erlang/OTP from builds.hex.pm. GitHub-releases-based
+      # tools (gleam, rebar3) cannot be resolved here: setup-beam fetches the
+      # releases *list* API (api.github.com/.../releases?per_page=100), which
+      # is rate-limited/empty from runners. rebar3 is not needed (deps are pure
+      # Gleam), and Gleam is installed from its release asset below.
       - uses: erlef/setup-beam@v1
         with:
           otp-version: "29"
-          rebar3-version: "3"
       # setup-beam resolves Gleam versions via the GitHub releases *list* API
       # (api.github.com/repos/gleam-lang/gleam/releases), which returns an
       # empty list from runners (rate-limited), so "1.18.1"/"latest" both fail
