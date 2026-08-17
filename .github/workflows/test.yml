@@ -13,7 +13,11 @@ jobs:
       - uses: erlef/setup-beam@v1
         with:
           otp-version: "29"
+          # strict: loose matching fails for exact 3-part Gleam versions
+          # (setup-beam resolves loose specs via semver range intersection,
+          # which returns no match for e.g. "1.18.1")
           gleam-version: "1.18.1"
+          version-type: strict
           rebar3-version: "3"
       - run: gleam deps download
       - run: gleam test
