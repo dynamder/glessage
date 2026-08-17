@@ -1,0 +1,14 @@
+name = "glessage"
+version = "0.1.0"
+description = "A pure Gleam MessagePack encoder and decoder, with no native code"
+licences = ["Apache-2.0"]
+
+# TODO: 发布到 Hex 前填写
+# repository = { type = "github", user = "your-username", repo = "glessage" }
+# links = [{ title = "Website", href = "https://hexdocs.pm/glessage/" }]
+
+[dependencies]
+gleam_stdlib = ">= 1.0.0 and < 2.0.0"
+
+[dev_dependencies]
+gleeunit = ">= 1.0.0 and < 2.0.0"
