@@ -10,14 +10,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # setup-beam installs Erlang/OTP and rebar3 from builds.hex.pm.
       - uses: erlef/setup-beam@v1
         with:
           otp-version: "29"
-          # 'latest' bypasses setup-beam's loose range matching, which fails
-          # for exact 3-part Gleam versions like "1.18.1" (and would need
-          # version-type: strict, which then breaks loose OTP matching)
-          gleam-version: latest
           rebar3-version: "3"
+      # setup-beam resolves Gleam versions via the GitHub releases *list* API
+      # (api.github.com/repos/gleam-lang/gleam/releases), which returns an
+      # empty list from runners (rate-limited), so "1.18.1"/"latest" both fail
+      # with "version not found in version list". Download the release binary
+      # directly from github.com instead — release assets are served by the
+      # CDN and are not subject to the API rate limit.
+      - name: Install Gleam
+        run: |
+          curl -fsSL -o /tmp/gleam.tar.gz \
+            https://github.com/gleam-lang/gleam/releases/download/v1.18.1/gleam-v1.18.1-x86_64-unknown-linux-musl.tar.gz
+          tar -xzf /tmp/gleam.tar.gz -C /usr/local/bin gleam
+          gleam --version
       - run: gleam deps download
       - run: gleam test
       - run: gleam format --check src test
